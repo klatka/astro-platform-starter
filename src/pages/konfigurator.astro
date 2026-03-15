@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import '../styles/globals.css';
+import SmartHomeKonfigurator from '../components/SmartHomeKonfigurator';
+---
+
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Smart Home Konfigurator – Kostenloses Angebot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Konfigurieren Sie Ihr persönliches Smart Home in wenigen Minuten und erhalten Sie ein kostenloses, maßgeschneidertes Angebot."
+        />
+        <meta name="generator" content={Astro.generator} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
+    </head>
+    <body class="antialiased text-white bg-complementary">
+        <div class="flex flex-col min-h-screen px-4 sm:px-8 bg-noise">
+            <!-- Header -->
+            <header class="py-6 sm:py-10 text-center">
+                <a href="/" class="inline-flex items-center gap-2 no-underline opacity-80 hover:opacity-100 transition-opacity mb-6">
+                    <span class="text-sm">← Zurück zur Startseite</span>
+                </a>
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-5xl mb-3">🏠</div>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
+                        Ihr Smart Home-Konfigurator
+                    </h1>
+                    <p class="text-base sm:text-lg opacity-75 max-w-lg mx-auto">
+                        In nur 2 Minuten zu Ihrem persönlichen Smart Home-Konzept –
+                        <strong>kostenlos & unverbindlich</strong>.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Configurator -->
+            <main class="flex-grow pb-12">
+                <SmartHomeKonfigurator client:load />
+            </main>
+
+            <!-- Footer -->
+            <footer class="py-6 text-center text-xs opacity-50 border-t border-white/10">
+                <p>© {new Date().getFullYear()} Smart Home Services &middot;
+                    <a href="/impressum" class="no-underline hover:opacity-80">Impressum</a> &middot;
+                    <a href="/datenschutz" class="no-underline hover:opacity-80">Datenschutz</a>
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
