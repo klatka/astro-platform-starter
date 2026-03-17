@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const EMAIL_REGEX = /^[^\s@]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface FormData {
@@ -684,7 +688,7 @@ export default function SmartHomeKonfigurator() {
             const newErrors: Partial<Record<keyof FormData, string>> = {};
             if (!data.email.trim()) {
                 newErrors.email = 'Bitte geben Sie Ihre E-Mail-Adresse ein.';
-            } else if (!/^[^\s@]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/.test(data.email)) {
+            } else if (!EMAIL_REGEX.test(data.email)) {
                 newErrors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
             }
             if (!data.datenschutz) {
