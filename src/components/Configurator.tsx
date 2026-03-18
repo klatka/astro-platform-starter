@@ -126,7 +126,7 @@ interface ProgressBarProps {
 }
 
 function ProgressBar({ current, total }: ProgressBarProps) {
-    const pct = Math.round(((current + 1) / total) * 100);
+    const pct = Math.round((current / total) * 100);
     return (
         <div style={{ marginBottom: '2rem' }}>
             <div
@@ -528,7 +528,7 @@ function Step6({ data, setData, errors, clearError }: Step6Props) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', opacity: 0.8 }}>
-                            Telefon <span style={{ opacity: 0.5 }}>(optional)</span>
+                            Telefon
                         </label>
                         <input
                             style={inputStyle('telefon')}
@@ -541,7 +541,7 @@ function Step6({ data, setData, errors, clearError }: Step6Props) {
                     </div>
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', opacity: 0.8 }}>
-                            Postleitzahl <span style={{ opacity: 0.5 }}>(optional)</span>
+                            Postleitzahl
                         </label>
                         <input
                             style={inputStyle('plz')}
