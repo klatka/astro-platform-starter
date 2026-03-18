@@ -1,19 +1,52 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Markdown from '../components/Markdown.astro';
-
-const explainer = `
-An Astro website can go way beyond static pages - on the right platform.
-
-Netlify supports not only [Streaming SSR](https://docs.astro.build/en/guides/server-side-rendering/#html-streaming) and fast [Edge Middleware](https://docs.astro.build/en/guides/middleware/), but also [on-demand revalidation](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/) and [stale-while-revalidate](https://www.netlify.com/blog/swr-and-fine-grained-cache-control/). 
-Any page or data can be rebuilt only when needed, without site visitors ever getting a performance hit.
-`;
+import '@fontsource-variable/inter/wght.css';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import '../styles/globals.css';
+import Configurator from '../components/Configurator';
 ---
 
-<Layout title="Welcome to Astro.">
-    <h1 class="mb-10">Netlify Platform Starter for Astro</h1>
-    <Markdown content={explainer} class="mb-10 text-lg" />
-    <p>
-        <a href="https://docs.netlify.com/frameworks/astro/" class="btn btn-lg sm:min-w-64">Read the Docs</a>
-    </p>
-</Layout>
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Smart Home Konfigurator – Kostenloses Angebot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Konfigurieren Sie Ihr persönliches Smart Home in wenigen Minuten und erhalten Sie ein kostenloses, maßgeschneidertes Angebot."
+        />
+        <meta name="generator" content={Astro.generator} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
+    </head>
+    <body class="antialiased text-white bg-complementary">
+        <div class="flex flex-col min-h-screen px-4 sm:px-8 bg-noise">
+            <!-- Header -->
+            <header class="py-6 sm:py-10 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-5xl mb-3">🏠</div>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
+                        Ihr Smart Home-Konfigurator
+                    </h1>
+                    <p class="text-base sm:text-lg opacity-75 max-w-lg mx-auto">
+                        In nur 2 Minuten zu Ihrem persönlichen Smart Home-Konzept –
+                        <strong>kostenlos & unverbindlich</strong>.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Configurator -->
+            <main class="flex-grow pb-12">
+                <Configurator client:load />
+            </main>
+
+            <!-- Footer -->
+            <footer class="py-6 text-center text-xs opacity-50 border-t border-white/10">
+                <p>© {new Date().getFullYear()} Smart Home Services &middot;
+                    <a href="/impressum" class="no-underline hover:opacity-80">Impressum</a> &middot;
+                    <a href="/datenschutz" class="no-underline hover:opacity-80">Datenschutz</a>
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
