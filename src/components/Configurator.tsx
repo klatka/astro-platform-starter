@@ -55,6 +55,15 @@ const STEPS = [
     'Kontakt'
 ];
 
+const STEP_BACKGROUNDS = [
+    'linear-gradient(135deg, rgba(0,199,251,0.10) 0%, rgba(18,123,147,0.15) 50%, rgba(44,50,64,0.50) 100%)',
+    'linear-gradient(160deg, rgba(44,50,64,0.55) 0%, rgba(0,199,251,0.10) 55%, rgba(18,123,147,0.18) 100%)',
+    'linear-gradient(120deg, rgba(18,123,147,0.18) 0%, rgba(44,50,64,0.50) 50%, rgba(0,199,251,0.08) 100%)',
+    'linear-gradient(150deg, rgba(0,199,251,0.07) 0%, rgba(18,123,147,0.20) 50%, rgba(44,50,64,0.55) 100%)',
+    'linear-gradient(135deg, rgba(44,50,64,0.55) 0%, rgba(0,199,251,0.12) 50%, rgba(18,123,147,0.20) 100%)',
+    'linear-gradient(135deg, rgba(0,199,251,0.15) 0%, rgba(18,123,147,0.22) 50%, rgba(44,50,64,0.45) 100%)'
+];
+
 // ─── Helper: multi-select card ────────────────────────────────────────────────
 
 interface OptionCardProps {
@@ -77,8 +86,8 @@ function OptionCard({ label, icon, selected, onClick, description }: OptionCardP
                 gap: '0.5rem',
                 padding: '1rem',
                 borderRadius: '0.75rem',
-                border: selected ? '2px solid #f67280' : '2px solid rgba(255,255,255,0.15)',
-                background: selected ? 'rgba(246,114,128,0.15)' : 'rgba(255,255,255,0.05)',
+                border: selected ? '2px solid #00C7FB' : '2px solid rgba(255,255,255,0.15)',
+                background: selected ? 'rgba(0,199,251,0.15)' : 'rgba(255,255,255,0.05)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 textAlign: 'center',
@@ -155,7 +164,7 @@ function ProgressBar({ current, total }: ProgressBarProps) {
                     style={{
                         height: '100%',
                         width: `${pct}%`,
-                        background: 'linear-gradient(90deg, #f67280, #c06c84)',
+                        background: 'linear-gradient(90deg, #00C7FB, #127B93)',
                         borderRadius: '3px',
                         transition: 'width 0.4s ease'
                     }}
@@ -166,7 +175,7 @@ function ProgressBar({ current, total }: ProgressBarProps) {
                     marginTop: '0.75rem',
                     fontSize: '0.9rem',
                     fontWeight: 700,
-                    color: '#f67280'
+                    color: '#00C7FB'
                 }}
             >
                 {STEPS[current]}
@@ -511,7 +520,7 @@ function Step6({ data, setData, errors, clearError }: Step6Props) {
                 </div>
                 <div>
                     <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', opacity: 0.8 }}>
-                        E-Mail-Adresse <span style={{ color: '#f67280' }}>*</span>
+                        E-Mail-Adresse <span style={{ color: '#00C7FB' }}>*</span>
                     </label>
                     <input
                         style={inputStyle('email')}
@@ -570,15 +579,15 @@ function Step6({ data, setData, errors, clearError }: Step6Props) {
                         type="checkbox"
                         checked={data.datenschutz}
                         onChange={(e) => { setData({ ...data, datenschutz: e.target.checked }); clearError('datenschutz'); }}
-                        style={{ marginTop: '0.15rem', accentColor: '#f67280', width: '1rem', height: '1rem', flexShrink: 0 }}
+                        style={{ marginTop: '0.15rem', accentColor: '#00C7FB', width: '1rem', height: '1rem', flexShrink: 0 }}
                     />
                     <label htmlFor="datenschutz" style={{ fontSize: '0.85rem', opacity: 0.8, lineHeight: 1.5, cursor: 'pointer' }}>
                         Ich stimme zu, dass meine Daten zur Erstellung eines persönlichen Smart Home-Angebots verwendet
                         werden. Weitere Informationen in unserer{' '}
-                        <a href="/datenschutz" style={{ color: '#f67280' }}>
+                        <a href="/datenschutz" style={{ color: '#00C7FB' }}>
                             Datenschutzerklärung
                         </a>
-                        . <span style={{ color: '#f67280' }}>*</span>
+                        . <span style={{ color: '#00C7FB' }}>*</span>
                     </label>
                 </div>
                 {errors.datenschutz && (
@@ -595,10 +604,10 @@ function ThankYou({ email }: { email: string }) {
     return (
         <div style={{ textAlign: 'center', padding: '2rem 0' }}>
             <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>🎉</div>
-            <h2 style={{ marginBottom: '1rem', color: '#f67280' }}>Vielen Dank!</h2>
+            <h2 style={{ marginBottom: '1rem', color: '#00C7FB' }}>Vielen Dank!</h2>
             <p style={{ opacity: 0.9, marginBottom: '0.75rem', fontSize: '1.05rem' }}>
                 Wir haben Ihre Anfrage erhalten und werden Ihnen Ihr persönliches Smart Home-Konzept an{' '}
-                <strong style={{ color: '#f67280' }}>{email}</strong> zusenden.
+                <strong style={{ color: '#00C7FB' }}>{email}</strong> zusenden.
             </p>
             <p style={{ opacity: 0.7, marginBottom: '2rem', fontSize: '0.9rem' }}>
                 In der Regel melden wir uns innerhalb von 24 Stunden bei Ihnen.
@@ -615,9 +624,9 @@ function ThankYou({ email }: { email: string }) {
                 <div
                     style={{
                         padding: '1rem',
-                        background: 'rgba(246,114,128,0.1)',
+                        background: 'rgba(0,199,251,0.1)',
                         borderRadius: '0.75rem',
-                        border: '1px solid rgba(246,114,128,0.3)',
+                        border: '1px solid rgba(0,199,251,0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
@@ -630,9 +639,9 @@ function ThankYou({ email }: { email: string }) {
                 <div
                     style={{
                         padding: '1rem',
-                        background: 'rgba(246,114,128,0.1)',
+                        background: 'rgba(0,199,251,0.1)',
                         borderRadius: '0.75rem',
-                        border: '1px solid rgba(246,114,128,0.3)',
+                        border: '1px solid rgba(0,199,251,0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
@@ -645,9 +654,9 @@ function ThankYou({ email }: { email: string }) {
                 <div
                     style={{
                         padding: '1rem',
-                        background: 'rgba(246,114,128,0.1)',
+                        background: 'rgba(0,199,251,0.1)',
                         borderRadius: '0.75rem',
-                        border: '1px solid rgba(246,114,128,0.3)',
+                        border: '1px solid rgba(0,199,251,0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
@@ -765,7 +774,7 @@ export default function SmartHomeKonfigurator() {
 
     const btnPrimary: React.CSSProperties = {
         ...btnBase,
-        background: 'linear-gradient(135deg, #f67280, #c06c84)',
+        background: 'linear-gradient(135deg, #00C7FB, #127B93)',
         color: 'white',
         flex: 1
     };
@@ -781,11 +790,14 @@ export default function SmartHomeKonfigurator() {
         return (
             <div
                 style={{
-                    background: 'rgba(255,255,255,0.04)',
+                    background: STEP_BACKGROUNDS[STEP_BACKGROUNDS.length - 1],
                     borderRadius: '1rem',
                     padding: '2rem',
                     maxWidth: '680px',
-                    margin: '0 auto'
+                    margin: '0 auto',
+                    border: '1px solid rgba(0,199,251,0.25)',
+                    boxShadow: '0 0 40px rgba(0,199,251,0.08), inset 0 1px 0 rgba(0,199,251,0.1)',
+                    backdropFilter: 'blur(8px)'
                 }}
             >
                 <ThankYou email={data.email} />
@@ -796,11 +808,15 @@ export default function SmartHomeKonfigurator() {
     return (
         <div
             style={{
-                background: 'rgba(255,255,255,0.04)',
+                background: STEP_BACKGROUNDS[step],
                 borderRadius: '1rem',
                 padding: '2rem',
                 maxWidth: '680px',
-                margin: '0 auto'
+                margin: '0 auto',
+                border: '1px solid rgba(0,199,251,0.20)',
+                boxShadow: '0 0 40px rgba(0,199,251,0.08), inset 0 1px 0 rgba(0,199,251,0.1)',
+                backdropFilter: 'blur(8px)',
+                transition: 'background 0.5s ease'
             }}
         >
             <ProgressBar current={step} total={totalSteps} />
