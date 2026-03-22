@@ -2,9 +2,10 @@
 
 @theme {
     --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-primary: #f67280;
+    --color-primary: #00C7FB;
     --color-primary-content: #101828;
-    --color-complementary: #355c7d;
+    --color-secondary: #127B93;
+    --color-complementary: #2C3240;
     --background-image-noise: linear-gradient(
             to bottom,
             color-mix(in oklab, var(--color-gray-950) 0%, transparent),
@@ -34,6 +35,21 @@
         @apply px-1 py-0.5 font-mono rounded bg-gray-900 text-primary;
         font-size: 0.9em;
     }
+}
+
+@keyframes stepSlideInRight {
+    from { opacity: 0; transform: translateX(36px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes stepSlideInLeft {
+    from { opacity: 0; transform: translateX(-36px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bgFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 @layer components {
