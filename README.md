@@ -66,7 +66,7 @@ supabase/migrations/20260322000000_create_leads_table.sql
 
 You can also paste its contents directly into the SQL Editor and click **Run**.
 
-The migration creates the table and enables Row-Level Security (RLS) so that the public anon key cannot read rows, while the server-side service-role key can still insert them.
+The migration creates the table and enables Row-Level Security (RLS). Both the `anon` key and the `service_role` key can insert rows; only reads are blocked for the anon key so lead data is never exposed publicly.
 
 ### 3. Copy your API credentials
 

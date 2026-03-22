@@ -19,13 +19,21 @@ create table if not exists leads (
     source        text        not null default 'smarthome-konfigurator'
 );
 
--- Enable Row-Level Security (RLS) so that the public anon key cannot read rows.
--- Only the service-role key (used server-side) is allowed to insert.
+-- Enable Row-Level Security (RLS).
+-- Inserts are allowed for both the service-role key and the anon key (see policies below).
+-- Reads are blocked for the anon key so row data is never exposed publicly.
 alter table leads enable row level security;
 
--- Allow server-side inserts from the service-role key.
--- The service-role key bypasses RLS, so no extra policy is needed for inserts.
--- The policy below ensures nobody can SELECT rows via the anon key.
+-- Allow server-side inserts.
+-- The service-role key bypasses RLS entirely.
+-- The policy below also grants the anon key insert access so that the fallback
+-- path in src/lib/supabase.ts (SUPABASE_ANON_KEY) can persist leads.
+create policy "Allow anonymous inserts"
+    on leads
+    for insert
+    with check (true);
+
+-- Deny public reads so row data cannot be read via the anon key.
 create policy "No public read access"
     on leads
     for select
