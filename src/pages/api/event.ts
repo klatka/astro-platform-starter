@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { insertConfiguratorEvent } from '../../lib/supabase';
 
 export const prerender = false;
 
@@ -70,6 +71,17 @@ export const POST: APIRoute = async ({ request }) => {
         }
     } else {
         console.log('[event] No WEBHOOK_URL configured – event data:', JSON.stringify(body));
+    }
+
+    // Persist event to Supabase (non-blocking – failure does not affect the response)
+    try {
+        await insertConfiguratorEvent({
+            event_type: body.type,
+            step: body.step,
+            step_name: body.stepName
+        });
+    } catch (err) {
+        console.error('[event] Supabase insert error:', err);
     }
 
     return new Response(JSON.stringify({ success: true }), {

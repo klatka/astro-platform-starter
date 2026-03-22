@@ -707,8 +707,11 @@ export default function SmartHomeKonfigurator() {
     const submittedRef = useRef(submitted);
     submittedRef.current = submitted;
 
-    // Notify on configurator open
+    // Notify on configurator open (once per session to avoid double-fire in React Strict Mode)
     useEffect(() => {
+        const key = 'konfigurator_opened';
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, '1');
         fetch('/api/event', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
