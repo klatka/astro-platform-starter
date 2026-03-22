@@ -37,6 +37,21 @@
     }
 }
 
+@keyframes stepSlideInRight {
+    from { opacity: 0; transform: translateX(36px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes stepSlideInLeft {
+    from { opacity: 0; transform: translateX(-36px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bgFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 @layer components {
     .markdown {
         > * {
