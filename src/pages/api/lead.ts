@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import { sendLeadConfirmation, type LeadEmailData } from '../../lib/email';
+import { insertLead } from '../../lib/supabase';
 
 export const prerender = false;
 
@@ -34,6 +36,24 @@ export const POST: APIRoute = async ({ request }) => {
         }
     } else {
         console.log('[lead] No WEBHOOK_URL configured – lead data:', JSON.stringify(body));
+    }
+
+    // Persist lead to Supabase (non-blocking – failure does not affect the response)
+    const leadData = body as LeadEmailData;
+
+    try {
+        await insertLead(leadData);
+    } catch (err) {
+        console.error('[lead] Supabase insert error:', err);
+    }
+
+    // Send confirmation email (non-blocking – failure does not affect the response)
+    if (leadData?.email) {
+        try {
+            await sendLeadConfirmation(leadData);
+        } catch (err) {
+            console.error('[lead] Email delivery failed:', err);
+        }
     }
 
     return new Response(JSON.stringify({ success: true }), {
