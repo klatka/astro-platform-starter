@@ -258,7 +258,7 @@ function StepBaujahr({ data, setData }: { data: FormData; setData: (d: FormData)
             <p style={{ opacity: 0.7, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
                 Diese Information hilft uns, die optimale Lösung für Ihr Zuhause zu empfehlen.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {baujahrTypes.map((t) => (
                     <SingleCard
                         key={t.value}
