@@ -3,13 +3,31 @@ import { insertConfiguratorEvent } from '../../lib/supabase';
 
 export const prerender = false;
 
+interface EmbedField {
+    name: string;
+    value: string;
+    inline?: boolean;
+}
+
+interface DiscordEmbed {
+    title: string;
+    description: string;
+    color: number;
+    fields?: EmbedField[];
+    timestamp: string;
+}
+
+interface DiscordWebhookPayload {
+    embeds: DiscordEmbed[];
+}
+
 interface EventBody {
     type: 'configurator_opened' | 'configurator_abandoned';
     step?: number;
     stepName?: string;
 }
 
-function buildDiscordPayload(event: EventBody): object {
+function buildDiscordPayload(event: EventBody): DiscordWebhookPayload {
     if (event.type === 'configurator_opened') {
         return {
             embeds: [

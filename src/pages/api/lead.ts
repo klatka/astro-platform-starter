@@ -4,7 +4,23 @@ import { insertLead, insertConfiguratorEvent } from '../../lib/supabase';
 
 export const prerender = false;
 
-function buildLeadDiscordPayload(lead: LeadEmailData): object {
+interface EmbedField {
+    name: string;
+    value: string;
+    inline?: boolean;
+}
+
+interface DiscordWebhookPayload {
+    embeds: Array<{
+        title: string;
+        description: string;
+        color: number;
+        fields: EmbedField[];
+        timestamp: string;
+    }>;
+}
+
+function buildLeadDiscordPayload(lead: LeadEmailData): DiscordWebhookPayload {
     const name = [lead.vorname, lead.nachname].filter(Boolean).join(' ') || '–';
     const fields = [
         { name: 'Name', value: name, inline: true },

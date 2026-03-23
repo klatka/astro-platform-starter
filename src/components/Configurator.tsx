@@ -707,16 +707,23 @@ export default function SmartHomeKonfigurator() {
     const submittedRef = useRef(submitted);
     submittedRef.current = submitted;
 
-    // Notify on configurator open (once per session to avoid double-fire in React Strict Mode)
+    // Notify on configurator open.
+    // Use an AbortController so that React Strict Mode's extra mount/unmount cycle
+    // cancels the first (spurious) fetch while the second (real) mount fires correctly.
+    // This also means every genuine page load sends the notification.
     useEffect(() => {
-        const key = 'konfigurator_opened';
-        if (sessionStorage.getItem(key)) return;
-        sessionStorage.setItem(key, '1');
+        const controller = new AbortController();
         fetch('/api/event', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 'configurator_opened' })
-        }).catch((err) => console.error('[configurator] Failed to send opened event:', err));
+            body: JSON.stringify({ type: 'configurator_opened' }),
+            signal: controller.signal
+        }).catch((err) => {
+            if (err.name !== 'AbortError') {
+                console.error('[configurator] Failed to send opened event:', err);
+            }
+        });
+        return () => controller.abort();
     }, []);
 
     // Notify when user leaves without submitting
