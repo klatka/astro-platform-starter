@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -47,7 +47,8 @@ const INITIAL_DATA: FormData = {
 // ─── Step meta ────────────────────────────────────────────────────────────────
 
 const STEPS = [
-    'Ihr Gebäude',
+    'Gebäudetyp',
+    'Baujahr',
     'Ihre Wünsche',
     'Ihre Motive',
     'Ihre Herausforderungen',
@@ -57,6 +58,7 @@ const STEPS = [
 
 const STEP_BACKGROUNDS = [
     'linear-gradient(135deg, rgba(0,199,251,0.10) 0%, rgba(18,123,147,0.15) 50%, rgba(44,50,64,0.50) 100%)',
+    'linear-gradient(145deg, rgba(18,123,147,0.12) 0%, rgba(0,199,251,0.12) 50%, rgba(44,50,64,0.52) 100%)',
     'linear-gradient(160deg, rgba(44,50,64,0.55) 0%, rgba(0,199,251,0.10) 55%, rgba(18,123,147,0.18) 100%)',
     'linear-gradient(120deg, rgba(18,123,147,0.18) 0%, rgba(44,50,64,0.50) 50%, rgba(0,199,251,0.08) 100%)',
     'linear-gradient(150deg, rgba(0,199,251,0.07) 0%, rgba(18,123,147,0.20) 50%, rgba(44,50,64,0.55) 100%)',
@@ -184,15 +186,52 @@ function ProgressBar({ current, total }: ProgressBarProps) {
     );
 }
 
-// ─── Step 1: Gebäude ──────────────────────────────────────────────────────────
+// ─── Step 1: Gebäudetyp ───────────────────────────────────────────────────────
 
 function Step1({ data, setData }: { data: FormData; setData: (d: FormData) => void }) {
     const gebaeudeTypes = [
         { value: 'einfamilienhaus', label: 'Einfamilienhaus', icon: '🏠' },
         { value: 'reihenhaus', label: 'Reihenhaus', icon: '🏘️' },
         { value: 'doppelhaus', label: 'Doppelhaus', icon: '🏡' },
-        { value: 'wohnung', label: 'Eigentumswohnung', icon: '🏢' }
+        { value: 'wohnung', label: 'Eigentumswohnung', icon: '🏢' },
+        { value: 'sonstiges', label: 'Sonstiges', icon: '🏗️' }
     ];
+    return (
+        <div>
+            <h2 style={{ marginBottom: '0.5rem' }}>Erzählen Sie uns von Ihrem Gebäude</h2>
+            <p style={{ opacity: 0.7, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+                Diese Information hilft uns, die beste Smart Home-Lösung für Sie zu finden.
+            </p>
+            <p style={{ fontWeight: 600, marginBottom: '0.75rem' }}>Welcher Gebäudetyp trifft auf Sie zu?</p>
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '0.75rem'
+                }}
+            >
+                {gebaeudeTypes.map((t) => (
+                    <div
+                        key={t.value}
+                        style={t.value === 'sonstiges' ? { gridColumn: '1 / -1' } : undefined}
+                    >
+                        <SingleCard
+                            value={t.value}
+                            label={t.label}
+                            icon={t.icon}
+                            selected={data.gebaeudetyp}
+                            onSelect={(v) => setData({ ...data, gebaeudetyp: v })}
+                        />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+// ─── Step 2: Baujahr ──────────────────────────────────────────────────────────
+
+function StepBaujahr({ data, setData }: { data: FormData; setData: (d: FormData) => void }) {
     const baujahrTypes = [
         {
             value: 'neubau',
@@ -215,31 +254,10 @@ function Step1({ data, setData }: { data: FormData; setData: (d: FormData) => vo
     ];
     return (
         <div>
-            <h2 style={{ marginBottom: '0.5rem' }}>Erzählen Sie uns von Ihrem Zuhause</h2>
+            <h2 style={{ marginBottom: '0.5rem' }}>Wann wurde das Gebäude gebaut?</h2>
             <p style={{ opacity: 0.7, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
-                Diese Informationen helfen uns, die beste Smart Home-Lösung für Sie zu finden.
+                Diese Information hilft uns, die optimale Lösung für Ihr Zuhause zu empfehlen.
             </p>
-            <p style={{ fontWeight: 600, marginBottom: '0.75rem' }}>Welcher Gebäudetyp trifft auf Sie zu?</p>
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    gap: '0.75rem',
-                    marginBottom: '1.5rem'
-                }}
-            >
-                {gebaeudeTypes.map((t) => (
-                    <SingleCard
-                        key={t.value}
-                        value={t.value}
-                        label={t.label}
-                        icon={t.icon}
-                        selected={data.gebaeudetyp}
-                        onSelect={(v) => setData({ ...data, gebaeudetyp: v })}
-                    />
-                ))}
-            </div>
-            <p style={{ fontWeight: 600, marginBottom: '0.75rem' }}>Wann wurde das Gebäude gebaut?</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
                 {baujahrTypes.map((t) => (
                     <SingleCard
@@ -683,6 +701,47 @@ export default function SmartHomeKonfigurator() {
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
+    // Refs so event listeners always see the latest values without re-registration
+    const stepRef = useRef(step);
+    stepRef.current = step;
+    const submittedRef = useRef(submitted);
+    submittedRef.current = submitted;
+
+    // Notify on configurator open.
+    // Use an AbortController so that React Strict Mode's extra mount/unmount cycle
+    // cancels the first (spurious) fetch while the second (real) mount fires correctly.
+    // This also means every genuine page load sends the notification.
+    useEffect(() => {
+        const controller = new AbortController();
+        fetch('/api/event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'configurator_opened' }),
+            signal: controller.signal
+        }).catch((err) => {
+            if (err.name !== 'AbortError') {
+                console.error('[configurator] Failed to send opened event:', err);
+            }
+        });
+        return () => controller.abort();
+    }, []);
+
+    // Notify when user leaves without submitting
+    useEffect(() => {
+        function handleBeforeUnload() {
+            if (!submittedRef.current) {
+                const payload = JSON.stringify({
+                    type: 'configurator_abandoned',
+                    step: stepRef.current,
+                    stepName: STEPS[stepRef.current]
+                });
+                navigator.sendBeacon('/api/event', new Blob([payload], { type: 'application/json' }));
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
+
     function clearError(field: keyof FormData) {
         setErrors((prev) => {
             if (!prev[field]) return prev;
@@ -695,7 +754,7 @@ export default function SmartHomeKonfigurator() {
     const totalSteps = STEPS.length;
 
     function validate(): boolean {
-        if (step === 5) {
+        if (step === 6) {
             const newErrors: Partial<Record<keyof FormData, string>> = {};
             if (!data.email.trim()) {
                 newErrors.email = 'Bitte geben Sie Ihre E-Mail-Adresse ein.';
@@ -712,11 +771,12 @@ export default function SmartHomeKonfigurator() {
     }
 
     function canProceed(): boolean {
-        if (step === 0) return data.gebaeudetyp !== '' && data.baujahr !== '';
-        if (step === 1) return data.bereiche.length > 0;
-        if (step === 2) return data.kaufmotive.length > 0;
-        if (step === 3) return data.painPoints.length > 0;
-        if (step === 4) return data.budget !== '' && data.zeitplanung !== '';
+        if (step === 0) return data.gebaeudetyp !== '';
+        if (step === 1) return data.baujahr !== '';
+        if (step === 2) return data.bereiche.length > 0;
+        if (step === 3) return data.kaufmotive.length > 0;
+        if (step === 4) return data.painPoints.length > 0;
+        if (step === 5) return data.budget !== '' && data.zeitplanung !== '';
         return true;
     }
 
@@ -865,11 +925,12 @@ export default function SmartHomeKonfigurator() {
                 {/* Step content slides in on each step change */}
                 <div key={step} style={{ minHeight: '340px', animation: slideAnim }}>
                     {step === 0 && <Step1 data={data} setData={setData} />}
-                    {step === 1 && <Step2 data={data} setData={setData} />}
-                    {step === 2 && <Step3 data={data} setData={setData} />}
-                    {step === 3 && <Step4 data={data} setData={setData} />}
-                    {step === 4 && <Step5 data={data} setData={setData} />}
-                    {step === 5 && <Step6 data={data} setData={setData} errors={errors} clearError={clearError} />}
+                    {step === 1 && <StepBaujahr data={data} setData={setData} />}
+                    {step === 2 && <Step2 data={data} setData={setData} />}
+                    {step === 3 && <Step3 data={data} setData={setData} />}
+                    {step === 4 && <Step4 data={data} setData={setData} />}
+                    {step === 5 && <Step5 data={data} setData={setData} />}
+                    {step === 6 && <Step6 data={data} setData={setData} errors={errors} clearError={clearError} />}
                 </div>
 
                 {submitError && (
@@ -913,7 +974,7 @@ export default function SmartHomeKonfigurator() {
 
                 {!canProceed() && (
                     <p style={{ textAlign: 'center', opacity: 0.5, fontSize: '0.8rem', marginTop: '0.75rem' }}>
-                        {step === 1 || step === 2 || step === 3
+                        {step === 2 || step === 3 || step === 4
                             ? 'Bitte wählen Sie mindestens eine Option aus.'
                             : 'Bitte füllen Sie alle Pflichtfelder aus.'}
                     </p>

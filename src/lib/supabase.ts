@@ -12,6 +12,35 @@ function getSupabaseClient() {
     return createClient(supabaseUrl, supabaseKey);
 }
 
+export interface ConfiguratorEventData {
+    event_type: 'configurator_opened' | 'configurator_abandoned' | 'form_submitted';
+    step?: number;
+    step_name?: string;
+}
+
+export async function insertConfiguratorEvent(data: ConfiguratorEventData): Promise<void> {
+    const client = getSupabaseClient();
+
+    if (!client) {
+        console.log('[supabase] No credentials configured – skipping event insert');
+        return;
+    }
+
+    const { error } = await client.from('configurator_events').insert([
+        {
+            event_type: data.event_type,
+            step: data.step ?? null,
+            step_name: data.step_name ?? null,
+            source: 'smarthome-konfigurator'
+        }
+    ]);
+
+    if (error) {
+        console.error('[supabase] Event insert failed:', error.message);
+        throw error;
+    }
+}
+
 export async function insertLead(data: LeadEmailData): Promise<void> {
     const client = getSupabaseClient();
 
